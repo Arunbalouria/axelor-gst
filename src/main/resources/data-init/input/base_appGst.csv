@@ -1,0 +1,2 @@
+"importId";"name";"code";"installOrder";"description";"modules";"sequence";"dependsOn";"imagePath"
+108;"Axelor-GST";"gst";444;"GST basic configurations";"axelor-gst";222;"base,account";"axelor-gst.png"

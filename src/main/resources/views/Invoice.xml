@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+  <grid name="invoice-grid" title="Invoices" model="com.axelor.apps.account.db.Invoice"
+    edit-icon="true" extension="true" id="gst-invoice-grid">
+    <extend target="//field[@name='inTaxTotal']">
+      <insert position="after">
+        <field name="useInvoiceAddressAsShipping" hideIf="partner==null"
+          if="__config__.app.isApp('gst')" />
+        <field name="netAmount" if="__config__.app.isApp('gst')" />
+        <field name="netIgst" title="Net IGST" if="__config__.app.isApp('gst')" />
+        <field name="netCgst" title="Net CGST" if="__config__.app.isApp('gst')" />
+        <field name="netSgst" title="NET SGST" if="__config__.app.isApp('gst')" />
+        <field name="grossAmount" title="Gross Amount" if="__config__.app.isApp('gst')" />
+      </insert>
+    </extend>
+    
+  </grid>
+
+
+
+  <form name="invoice-form" title="Invoice" model="com.axelor.apps.account.db.Invoice"
+    width="large" extension="true" id="gst-invoice-form">
+
+    <extend target="//button[@name ='reportsBtn']">
+      <insert position="after">
+        <button onClick="action-report-invoice" name="gstReport" title="GST Report"
+          icon="fa-print" readonlyIf="!id" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+      </insert>
+    </extend>
+
+    <extend target="//field[@name='inTaxTotal']">
+      <insert position="after">
+        <field name="useInvoiceAddressAsShipping" hideIf="partner==null"
+          if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="netAmount" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="netIgst" title="Net IGST" if="__config__.app.isApp('gst')"
+          if-module="axelor-gst"/>
+        <field name="netCgst" title="Net CGST" if="__config__.app.isApp('gst')"
+          if-module="axelor-gst"/>
+        <field name="netSgst" title="NET SGST" if="__config__.app.isApp('gst')"
+          if-module="axelor-gst"/>
+        <field name="grossAmount" title="Gross Amount" if="__config__.app.isApp('gst')"
+          if-module="axelor-gst"/>
+      </insert>
+    </extend>
+  </form>
+
+
+  <kanban name="invoice-kanban" columnBy="statusSelect"
+    model="com.axelor.apps.account.db.Invoice" sequenceBy="priority" title="Invoice Kanban">
+    <field name="status" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="company" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="reference" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="date" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="priority" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="partner.name" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="partyContact" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="invoiceAddress" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="shippingAddress" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="useInvoiceAddressAsShipping" if="__config__.app.isApp('gst')"
+      if-module="axelor-gst"/>
+    <field name="netAmount" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="netIgst" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="netCgst" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="netSgst" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="grossAmount" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+
+    <template>
+            <![CDATA[
+
+            <div class="card-body">
+
+                  <img ng-src="{{$image(null, 'company.logo')}}">
+                <h4>{{company.name}}</h4>
+                <h4>{{company.gstIn}}</h4>
+
+
+                  <ul>
+                      <li><i class='fa fa-id-card'></i> <span>{{partner.name}}</span></li>
+                      <li><i class='fa fa-user'></i> <span>{{partyContact}}</span></li>
+                      <li><i class='fa fa-envelope'></i> {{invoiceAddress}}</span></li>
+                      <li><i class='fa fa-phone'></i> {{netAmount}}</span></li>
+                      <li><i class='fa fa-calendar'></i> {{grossAmount}}</span></li>
+                      <li><i class='fa fa-group'></i> {{invoiceItems}}</span></li>
+                  </ul>
+                  </div>
+
+                  <div class="card-footer">
+
+                <i class='fa fa-clock-o'></i> <span>{{dateOfBirth|date:'YYYY-MM-DD '}}</span>
+                  </div>
+            ]]>
+    </template>
+  </kanban>
+
+
+  <action-group name="action-invoice-group-invoice-line-list-on-change"
+    id="gst-action-invoice-group-invoice-line-list-on-change">
+    <action name="action-invoice-method-update-product-qty-with-pack-header-qty"
+      if="__config__.app.isApp('supplychain') &amp;&amp; invoiceLineList.find{it->it.typeSelect == 2} != null"/>
+    <action name="action-invoice-method-compute"/>
+    <action name="action-invoice-method-generate-invoice-terms"/>
+    <action name="save" if="invoiceLineList.find{it->it.typeSelect == 2} != null"/>
+    <action name="action.set.all.values.onChange.invoiceLine"/>
+  </action-group>
+
+  <action-method name="action.set.all.values.onChange.invoiceLine">
+    <call class="com.axelor.gst.wab.InvoiceController" method="setAllAmount"
+      if="__config__.app.isApp('gst')"/>
+  </action-method>
+
+  <action-report output="Invoice-${date}${time}" name="action-report-invoice"
+    design="invoice.rptdesign" format="pdf">
+    <param name="invoiceId" expr="eval: id"/>
+  </action-report>
+
+</object-views>
+
+
+
+
+
+
+
+
+
+

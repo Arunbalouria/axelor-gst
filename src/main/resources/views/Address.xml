@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+  <grid name="address-grid" title="Address" model="com.axelor.apps.base.db.Address"
+    edit-icon="true" extension="true" id="gst-address-grid">
+    <extend target="//field[@name='zip']">
+      <insert position="after">
+        <field name="type" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="pincode" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="state" form-view="state-form" if="__config__.app.isApp('gst')"
+          if-module="axelor-gst"/>
+      </insert>
+    </extend>
+  </grid>
+
+  <form name="address-form" title="Address" model="com.axelor.apps.base.db.Address"
+    extension="true" id="gst-address-form">
+    <extend target="//field[@name='zip']">
+      <insert position="after">
+        <field name="type" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="pincode" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="state" form-view="state-form" if="__config__.app.isApp('gst')"
+          if-module="axelor-gst" domain="self.country = :addressL7Country"/>
+      </insert>
+    </extend>
+  </form>
+
+  <form name="address-partner-address-form" title="Address"
+    model="com.axelor.apps.base.db.Address" extension="true" id="gst-address-partner-address-form">
+    <extend target="//field[@name='zip']">
+      <insert position="after">
+        <field name="type" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="pincode" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="state" form-view="state-form" if="__config__.app.isApp('gst')"
+          if-module="axelor-gst"/>
+      </insert>
+    </extend>
+  </form>
+  
+</object-views>

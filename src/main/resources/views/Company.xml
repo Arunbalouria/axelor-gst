@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+	<grid name="company-grid" title="Companies"
+		model="com.axelor.apps.base.db.Company" extension="true"
+		id="gst-company-grid">
+		
+		<extend target="//field[@name='address']">
+			<insert position="after">
+				<field name="gstIn" colSpan="7"
+					placeholder="Enter 15 digit GST Id No."
+					if="__config__.app.isApp('gst')" if-module="axelor-gst" />
+			</insert>
+		</extend>
+	</grid>
+
+	<form name="company-form" title="Company"
+		model="com.axelor.apps.base.db.Company"
+		onSave="action-company-check-multi-banks" canNew="_canNew"
+		extension="true" id="gst-company-form">
+
+		<extend target="//field[@name='address']">
+			<insert position="after">
+				<field name="gstIn" colSpan="7"
+					placeholder="Enter 15 digit GST Id No."
+					if="__config__.app.isApp('gst')" if-module="axelor-gst" />
+			</insert>
+		</extend>
+	</form>
+
+</object-views>

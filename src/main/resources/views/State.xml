@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+  <grid name="state-grid" title="States" model="com.axelor.app.gst.db.State" edit-icon="true">
+    <field name="name" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    <field name="country" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+  </grid>
+
+  <form name="state-form" title="State" model="com.axelor.app.gst.db.State">
+    <panel title="Overview">
+      <field name="name" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+      <field name="country" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+    </panel>
+  </form>
+
+</object-views>

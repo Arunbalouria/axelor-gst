@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+	<grid name="partner-grid" title="Parties"
+		model="com.axelor.apps.base.db.Partner" edit-icon="true"
+		extension="true" id="gst-Partner-grid">
+		<extend target="//field[@name='registrationCode']">
+			<insert position="after">
+				<field name="GSTIN" title="GSTIN" colSpan="7"
+					placeholder="Enter 15 digit GST Id No."
+					if="__config__.app.isApp('gst')" if-module="axelor-gst" />
+			</insert>
+		</extend>
+	</grid>
+
+	<form name="partner-form" title="Party"
+		model="com.axelor.apps.base.db.Partner" extension="true"
+		id="gst-partner-form">
+		<extend target="//field[@name='registrationCode']">
+			<insert position="after">
+				<field name="GSTIN" title="GSTIN" colSpan="7"
+					placeholder="Enter 15 digit GST Id No."
+					if="__config__.app.isApp('gst')" if-module="axelor-gst" />
+			</insert>
+		</extend>
+	</form>
+
+
+	<cards name="party-card" model="com.axelor.apps.base.db.Partner"
+		title="Party Card" orderBy="name">
+		<field name="partnerSeq" if="__config__.app.isApp('gst')"
+			if-module="axelor-gst" />
+		<field name="name" if="__config__.app.isApp('gst')"
+			if-module="axelor-gst" />
+		<field name="type" if="__config__.app.isApp('gst')"
+			if-module="axelor-gst" />
+		<field name="GSTIN" />
+		<field name="address.type" if="__config__.app.isApp('gst')"
+			if-module="axelor-gst" />
+		<field name="address.line1" if="__config__.app.isApp('gst')"
+			if-module="axelor-gst" />
+		<field name="address.line2" if="__config__.app.isApp('gst')"
+			if-module="axelor-gst" />
+		<field name="address.city.name" if="__config__.app.isApp('gst')"
+			if-module="axelor-gst" />
+		<field name="address.city.state"
+			if="__config__.app.isApp('gst')" if-module="axelor-gst" />
+		<field name="address.city.country"
+			if="__config__.app.isApp('gst')" if-module="axelor-gst" />
+		<field name="address.state.name"
+			if="__config__.app.isApp('gst')" if-module="axelor-gst" />
+		<field name="address.state.country"
+			if="__config__.app.isApp('gst')" if-module="axelor-gst" />
+		<field name="address.country.name"
+			if="__config__.app.isApp('gst')" if-module="axelor-gst" />
+		<field name="address.pincode" if="__config__.app.isApp('gst')"
+			if-module="axelor-gst" />
+		<template>
+<![CDATA[
+
+<div class="span8">
+    <h2>Name: {{name}}</h2>
+    <h5>Reference: {{reference}}</h5>
+    <h5>Type: {{type}}</h5>
+    <h3>GSTIN: {{GSTIN}}</h3>
+  </div>
+  <div class="span8">
+    <address>
+    <h3>Address Information</h3>
+      <h4>Address Type: {{address.type}}</h4>
+       <h4>Lane1: {{address.line1}}</h4>
+        <h4>Lane2: {{address.line2}}</h4>
+         <h3>City Information</h3>
+         <h4>City Name: {{address.city.name}}</h4>
+         <h4>City Sate: {{address.city.state}}</h4>
+         <h4>City Country: {{address.city.country}}</h4>
+         <h3>State Information</h3>
+         <h4>State Name: {{address.city.name}}</h4>
+         <h4>State Country: {{address.city.country}}</h4>
+          <h3>Country Information</h3>
+         <h4>Country Name: {{address.country.name}}</h4>
+           <h3>Pincord: {{address.pincode}}</h3>
+    </address>
+  </div>
+]]></template>
+	</cards>
+
+</object-views>
+
+
+
+
+
+
+
+
+

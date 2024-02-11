@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models
+  http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+  <module name="account" package="com.axelor.apps.account.db"/>
+
+  <entity sequential="true" name="Invoice" lang="java"
+    implements="com.axelor.apps.base.interfaces.PricedOrder" cachable="true">
+
+    <!-- <string name="status" readonly="true" selection="invoice.selection" default="draft"/> -->
+
+    <!-- <many-to-one ref="com.axelor.app.gst.db.Company" -->
+    <!-- name="company" /> -->
+
+    <!-- <string name="reference" readonly="true" /> -->
+    <!-- <datetime name="date" column="invoiceDate"/> -->
+
+    <integer name="priority"/>
+
+    <!-- <many-to-one ref="com.axelor.app.gst.db.Party" -->
+    <!-- name="party" /> -->
+
+    <!-- <many-to-one ref="com.axelor.app.gst.db.Contact" -->
+    <!-- name="partyContact" /> -->
+
+    <!-- <many-to-one ref="com.axelor.app.gst.db.Address" -->
+    <!-- name="invoiceAddress" /> -->
+
+    <!-- <many-to-one ref="com.axelor.app.gst.db.Address" -->
+    <!-- name="shippingAddress" /> -->
+
+    <boolean name="useInvoiceAddressAsShipping" title="Use Invoice Address as Shipping"
+      default="true"/>
+
+    <decimal name="netAmount" readonly="true"/>
+    <decimal name="netIgst" readonly="true"/>
+    <decimal name="netCgst" readonly="true"/>
+    <decimal name="netSgst" readonly="true"/>
+    <decimal name="grossAmount" readonly="true"/>
+    <!-- <one-to-many ref="com.axelor.app.gst.db.InvoiceLine" name="invoiceLine" mappedBy="invoice"/> -->
+  </entity>
+
+</domain-models>

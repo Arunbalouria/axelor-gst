@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+
+
+  <chart name="invoice.per.Status" title="Invoice Per Status">
+    <dataset type="sql">
+      SELECT
+      msi.title as status, count(*) as invoices
+      FROM
+      account_invoice as ai
+      left join (select * from meta_select_item where select_id =
+      169) as msi
+      ON
+      CAST(msi.value AS
+      INTEGER ) = ai.status_select
+      GROUP BY
+      status;
+    </dataset>
+    <category key="status" type="text" title="Satatus"/>
+    <series key="invoices" groupBy="status" type="line" title="Invoices"/>
+  </chart>
+
+  <action-view name="invoice.per.status.line" title="Invoice Per Status">
+    <view type="chart" name="invoice.per.Status"/>
+  </action-view>
+
+
+  <chart name="invoice.per.Status.per.Amount" title="Invoice Per Status Amount">
+    <dataset type="sql">
+      SELECT
+      msi.title as status, count(*) as invoices, sum(ai.gross_amount) as
+      amount
+      FROM
+      account_invoice as ai left join (select * from meta_select_item where select_id =
+      169) as msi
+      ON
+      CAST(msi.value AS INTEGER ) = ai.status_select
+      GROUP BY
+      status;
+
+    </dataset>
+    <category key="invoices" type="number" title="Invoices"/>
+    <series key="amount" title="Amount" type="bar" groupBy="status"/>
+  </chart>
+  <action-view name="bar-chart-for-amount-per-status" title="Amount per Status">
+    <view type="chart" name="invoice.per.Status.per.Amount"/>
+  </action-view>
+
+
+  <chart name="customer.per.state" title="Customer Per State">
+    <dataset type="sql">
+      select count(partner.id) as customer,state.name as state
+      from base_partner
+      as partner
+      left join base_partner_address as gpa
+      on partner.id = gpa.partner
+      left join
+      base_address as address
+      on gpa.address = address.id
+      left join gst_state as state
+      on address.state
+      = state.id
+      where is_customer = 't' group by state.name
+    </dataset>
+    <category key="state" type="number" title="Customer"/>
+    <series key="customer" title="State" type="pie" groupBy="state.name"/>
+  </chart>
+  <action-view name="pie-chart-for-customer-per-state" title="Customer per State">
+    <view type="chart" name="customer.per.state"/>
+  </action-view>
+
+
+
+  <chart name="unpaid-invoices-per-customer-Bar-chart" title="Unpaid Invoices Per Customer"
+    onInit="chart-set-fromdate-todate-action-record">
+
+    <search-fields>
+      <field name="fromDate" type="date" title="From Date"/>
+      <field name="toDate" type="date" title="To Date"/>
+    </search-fields>
+
+    <dataset type="sql">
+      select party.name as customer,count(invoice.id) as invoice
+      from
+      account_invoice
+      as invoice left join base_partner as party
+      on
+      invoice.partner = party.id
+      where
+      invoice.status_select in
+      (1,2)
+      and
+      invoice.invoice_date
+      between DATE(:fromDate) and DATE(:toDate)
+      group by
+      party.id
+    </dataset>
+
+    <category key="customer" type="number" title="Customer"/>
+    <series key="invoice" type="bar" title="Invoices" groupBy="customer"/>
+  </chart>
+
+  <action-record model="com.axelor.apps.account.db.Invoice"
+    name="chart-set-fromdate-todate-action-record">
+    <field name="fromDate" expr="eval:__date__.withDayOfMonth(1)"/>
+    <field name="toDate" expr=" eval:__date__ "/>
+  </action-record>
+
+  <action-view name="unPade.invoic.per.customer" title="Unped Invoices">
+    <view type="chart" name="unpaid-invoices-per-customer-Bar-chart"/>
+  </action-view>
+
+
+
+  <chart name="paid-invoice-per-categary-per-product-bar-chart" title="Paid Per Category"
+    onInit="chart-set-fromdate-todate-action-record">
+    <search-fields>
+      <field name="fromDate" type="date" title="From Date"/>
+      <field name="toDate" type="date" title="To Date"/>
+    </search-fields>
+    <dataset type="sql">
+      select count(invoice) as number_of_invoices , gc.name as product_category
+      from account_invoice as invoice left join account_invoice_line as gil
+      on
+      invoice.id =
+      gil.invoice
+      left join base_product as gp
+      on
+      gil.product = gp.id
+      left join base_product_category as
+      gc
+      on
+      gp.product_category = gc.id
+      where
+      invoice.status_select=3
+      group by gc.name;
+
+    </dataset>
+    <category key="product_category" type="text" title="Product Name"/>
+    <series key="number_of_invoices" type="bar" title="Invoices" groupBy="product_category"/>
+  </chart>
+  <action-view name="paid.invoice.per.category.chart" title="Paid Per Category">
+    <view type="chart" name="paid-invoice-per-categary-per-product-bar-chart"/>
+  </action-view>
+
+
+  <grid model="com.axelor.apps.account.db.Invoice" title="Invoic" name="invoice-grid"
+    extension="true" id="gst-dashbord-invoice-grid">
+    <field name="priority"/>
+    <field name="useInvoiceAddressAsShipping"/>
+    <field name="netAmount"/>
+    <field name="netIgst" title="Net IGST"/>
+    <field name="netCgst" title="Net CGST"/>
+    <field name="netSgst" title="Net SGST"/>
+    <field name="grossAmount" title="Gross Amount"/>
+  </grid>
+
+
+</object-views>

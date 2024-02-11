@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+  <grid name="bank-grid" title="Bank Accounts" model="com.axelor.apps.base.db.Bank"
+    extension="true" edit-icon="true" id="gst-bank-grid">
+    <extend target="//field[@name='bankDetailsTypeSelect']">
+      <insert position="after">
+        <field name="type" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="IFSC" title="IFSC" if="__config__.app.isApp('gst')"
+          if-module="axelor-gst"/>
+      </insert>
+    </extend>
+  </grid>
+
+
+  <form name="bank-form" title="Bank account" model="com.axelor.apps.base.db.Bank"
+    extension="true" id="gst-bank-form">
+    <extend target="//field[@name='bankDetailsTypeSelect']">
+      <insert position="after">
+        <field name="type" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="IFSC" title="IFSC" if="__config__.app.isApp('gst')"
+          if-module="axelor-gst"/>
+      </insert>
+    </extend>
+  </form>
+
+
+</object-views>

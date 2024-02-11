@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+  <grid name="invoice-line-grid" title="Invoice lines"
+    model="com.axelor.apps.account.db.InvoiceLine" edit-icon="true" extension="true"
+    id="gst-invoice-line-grid">
+        <extend target="//field[@name='companyInTaxTotal']">
+      <insert position="after">
+        <field name="useInvoiceAddressAsShipping" hideIf="party==null"
+          if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="HSBN" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="netAmount" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="gstRate" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="IGST" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="SGST" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="CGST" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="grossAmount" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+      </insert>
+    </extend>
+  </grid>
+
+
+
+  <form name="invoice-line-form" title="Invoice line"
+    model="com.axelor.apps.account.db.InvoiceLine" extension="true" id="gst-invoice-line-form"
+    onSave="">
+    <extend target="//field[@name='companyInTaxTotal']">
+      <insert position="after">
+        <field name="useInvoiceAddressAsShipping" hideIf="party==null"
+          if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="HSBN" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="netAmount" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="gstRate" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="IGST" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="SGST" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="CGST" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+        <field name="grossAmount" if="__config__.app.isApp('gst')" if-module="axelor-gst"/>
+      </insert>
+    </extend>
+    <extend
+      target="//panel-tabs[@name='mainPanelTab']/panel[@name='informationsPanel']/field[@name='qty']">
+      <attribute name="onChange"
+        value="action-group-account-invoice-line-qty-onchange,action-record-gst-invoice-line-qty-onchange,all.gst.calculation.onchange"/>
+    </extend>
+  </form>
+
+  <action-group name="action-group-account-invoice-line-product-onchange"
+    id="gst-action-group-account-invoice-line-product-onchange">
+    <action name="action-invoice-line-method-get-product-information"/>
+    <action name="action-invoice-line-record-account-onchange"
+      if="__config__.app.getApp('account').manageCutOffPeriod"/>
+    <action name="action-invoice-line-method-compute"/>
+    <action name="action-invoice-line-method-get-and-compute-analytic-distribution"/>
+    <action name="action-budget-validate-exceed-line-amount"/>
+    <action name="action-invoice-line-method-get-fixed-asset-category"
+      if="__config__.app.isApp('account')"/>
+    <action name="action-attrs-account-invoice-line-onnew-onload"/>
+    <action name="action-invoice-line-method-translate-product-description-and-name"/>
+    <action name="action-attrs-account-invoice-line-cut-off-dates-required"/>
+    <action name="set.gstRate.product.invoice"/>
+  </action-group>
+
+  <action-record name="set.gstRate.product.invoice"
+    model="com.axelor.apps.account.db.InvoiceLine">
+    <field name="gstRate" expr="eval: __this__.product.gstRate"/>
+    <field name="HSBN" expr="eval: __this__.product.HSBN"/>
+  </action-record>
+
+  <action-record name="action-record-gst-invoice-line-qty-onchange"
+    model="com.axelor.apps.account.db.InvoiceLine">
+    <field name="netAmount" expr="eval: __this__.inTaxTotal"/>
+  </action-record>
+
+  <action-method name="all.gst.calculation.onchange">
+    <call class="com.axelor.gst.wab.InvoiceLineController" method="controller"
+      if="__config__.app.isApp('gst')"/>
+  </action-method>
+
+  <action-group name="action-group-account-invoice-line-qty-onchange"
+    id="gst-action-invoice-line-group-qty-onchange">
+    <action name="action-invoice-line-method-get-discount"/>
+    <action name="action-invoice-line-method-compute"/>
+    <action name="action-invoice-line-method-compute-analytic-distribution"/>
+    <action name="action-budget-validate-exceed-line-amount"/>
+    <action name="action-invoice-line-method-check-qty"/>
+    <action name="action-record-gst-invoice-line-qty-onchange"/>
+  </action-group>
+
+</object-views>
+
+
+
+
+
+
+
+
+
+
+
+

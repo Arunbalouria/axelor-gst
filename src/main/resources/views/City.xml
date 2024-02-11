@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+	<grid name="city-grid" title="Cities"
+		model="com.axelor.apps.base.db.City" edit-icon="true" extension="true"
+		id="gst-city-grid">
+		<extend target="//field[@name='country']">
+			<insert position="after">
+				<field name="state" if="__config__.app.isApp('gst')"
+					if-module="axelor-gst" />
+			</insert>
+		</extend>
+	</grid>
+
+
+	<form name="city-form" title="City"
+		model="com.axelor.apps.base.db.City" id="gst-city-form"
+		extension="true">
+		<extend target="//field[@name='country']">
+			<insert position="after">
+				<field name="state" if="__config__.app.isApp('gst')"
+					if-module="axelor-gst" domain="self.country = :country" />
+			</insert>
+		</extend>
+	</form>
+
+
+</object-views>
